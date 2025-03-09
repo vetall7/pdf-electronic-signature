@@ -5,6 +5,7 @@ from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives import hashes
 import secrets
+import os
 
 SALT = secrets.token_bytes(16)
 
@@ -63,6 +64,56 @@ def encrypt_private_key(private_key, pin):
     return ct
 
 
+def save_private_key(encrypted_private_key):
+    media_dir = '/media'
+    user = os.getlogin()
+    media_dir = f'/media/{user}'
+    if os.path.exists(media_dir):
+        usb_drives = [os.path.join(media_dir, d) for d in os.listdir(media_dir)
+                        if os.path.isdir(os.path.join(media_dir, d))]
+        if usb_drives:
+            usb_drive = usb_drives[0]
+            with open(f"{usb_drive}/private_key.pem", "wb") as f:
+                f.write(encrypted_private_key)
+
+            print(f"🔑 Private key saved successfully to {usb_drive}/private_key.pem")
+
+def save_public_key(public_key):
+    with open("public_key.pem", "wb") as f:
+        f.write(public_key.public_bytes(
+            encoding=serialization.Encoding.PEM,
+            format=serialization.PublicFormat.SubjectPublicKeyInfo
+        ))
+        print("🔑 Public key saved successfully to public_key.pem")
+
+
+# def list_usb_drives():
+#     output = os.popen('lsblk -o NAME,SIZE,TYPE,MOUNTPOINT').readlines()
+
+#     usb_drives = []
+#     for line in output:
+#         if 'usb' in line.lower() and 'part' in line.lower():
+#             parts = line.split()
+#             device = parts[0]
+#             mountpoint = parts[-1] if len(parts) > 3 else None
+#             usb_drives.append((device, mountpoint))
+
+#     return usb_drives
+
+# def select_usb_drive():
+#     usb_drives = list_usb_drives()
+#     if not usb_drives:
+#         print("No USB drives connected.")
+#         return None
+
+#     selected_drive = inquirer.select(
+#         message="Choose a USB drive:",
+#         choices=usb_drives,
+#     ).execute()
+
+#     return selected_drive
+
+
 def main():
     print("🔐 RSA Key Generator")
 
@@ -88,6 +139,12 @@ def main():
     encrypted_private_key = encrypt_private_key(private_key, pin)
 
     print("🔐 Private key encrypted successfully")
+
+    print("💾 Saving keys to files...")
+
+    save_private_key(encrypted_private_key)
+
+    save_public_key(public_key)
 
 
 if __name__ == "__main__":

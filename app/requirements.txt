@@ -1,0 +1,3 @@
+tk
+PyPDF2
+cryptography

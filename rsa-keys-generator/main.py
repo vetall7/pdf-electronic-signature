@@ -1,6 +1,5 @@
 import getpass
 from cryptography.hazmat.primitives.asymmetric import rsa
-from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives import hashes
@@ -42,26 +41,13 @@ def encrypt_private_key(private_key, pin):
 
     key = transform_pin_to_key_256(pin)
 
-    iv = secrets.token_bytes(16)
-    cipher = Cipher(
-        algorithms.AES(key),
-        modes.CBC(iv)
-    )
-
-    encryptor = cipher.encryptor()
-
     private_key_bytes = private_key.private_bytes(
         encoding=serialization.Encoding.PEM,
         format=serialization.PrivateFormat.TraditionalOpenSSL,
-        encryption_algorithm=serialization.NoEncryption()
+        encryption_algorithm=serialization.BestAvailableEncryption(key) # AES-256-CBC
     )
 
-    padding_length = 16 - (len(private_key_bytes) % 16)
-    private_key_bytes += bytes([padding_length]) * padding_length
-
-    ct = encryptor.update(private_key_bytes)
-
-    return ct
+    return private_key_bytes
 
 
 def save_private_key(encrypted_private_key):
@@ -77,6 +63,7 @@ def save_private_key(encrypted_private_key):
                 f.write(encrypted_private_key)
 
             print(f"🔑 Private key saved successfully to {usb_drive}/private_key.pem")
+
 
 def save_public_key(public_key):
     with open("public_key.pem", "wb") as f:

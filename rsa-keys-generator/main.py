@@ -41,7 +41,7 @@ def encrypt_private_key(private_key, pin):
 def save_private_key(encrypted_private_key):
     with open("private_key.pem", "wb") as f:
         f.write(encrypted_private_key)
-        print("🔑 Public key saved successfully to public_key.pem")
+        print("🔑 Private key saved successfully to private_key.pem")
 
     # media_dir = '/media'
     # user = os.getlogin()

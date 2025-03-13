@@ -73,7 +73,7 @@ def verify_pdf(file_path):
     try:
         signature = reader.attachments["signature"][0]
     except KeyError:
-        print("No signature found in the PDF.")
+        messagebox.showerror("Error", "No signature found in PDF")
         return False
 
     try:
@@ -83,8 +83,8 @@ def verify_pdf(file_path):
             padding.PKCS1v15(),
             hashes.SHA256()
         )
-        print("✅ PDF signature is valid!")
+        messagebox.showinfo("Success", "Signature verified successfully")
         return True
     except Exception as e:
-        print(f"❌ Signature verification failed: {e}")
+        messagebox.showerror("Error", "Invalid signature")
         return False

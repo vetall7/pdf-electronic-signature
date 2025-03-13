@@ -27,10 +27,10 @@ def enable_go_button(*args):
     else:
         go_button.pack_forget()
 
-def process_file():
+def process_file(pin):
     status = None
     if selected_mode == "sign":
-        status = sign_pdf(file_path)
+        status = sign_pdf(file_path, pin)
     else:
         status = verify_pdf(file_path)
     
@@ -76,13 +76,15 @@ upload_button.pack()
 
 file_label = tk.Label(root, text="")
 
-go_button = tk.Button(root, text="Go!", command=process_file)
-
 pin_frame = tk.Frame(root)
 tk.Label(pin_frame, text="Enter PIN:").pack(side=tk.LEFT)
 pin_entry = tk.Entry(pin_frame, show="*")
 pin_entry.pack(side=tk.LEFT)
 pin_entry.bind("<KeyRelease>", enable_go_button)
+
+
+go_button = tk.Button(root, text="Go", command=lambda: process_file(pin_entry.get()))
+
 
 status_label = tk.Label(root, text="")
 

@@ -1,0 +1,11 @@
+cffi==1.17.1
+cryptography==44.0.2
+inquirerpy==0.3.4
+pfzy==0.3.4
+prompt_toolkit==3.0.50
+psutil==7.0.0
+psutils==3.3.9
+puremagic==1.28
+pycparser==2.22
+pypdf==5.3.1
+wcwidth==0.2.13

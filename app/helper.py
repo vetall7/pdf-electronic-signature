@@ -48,7 +48,7 @@ def sign_pdf(file_path, pin):
     for page in reader.pages:
         writer.add_page(page)
 
-    pdf_data = b"".join(reader.pages[0].extract_text().encode('utf-8') for _ in reader.pages)
+    pdf_data = b"".join(page.extract_text().encode('utf-8') for page in reader.pages)
 
     signature = private_key.sign(pdf_data, padding.PKCS1v15(), hashes.SHA256())
     
@@ -67,7 +67,7 @@ def verify_pdf(file_path):
     
     reader = PdfReader(file_path.get())
 
-    pdf_data = b"".join(reader.pages[0].extract_text().encode('utf-8') for _ in reader.pages)
+    pdf_data = b"".join(page.extract_text().encode('utf-8') for page in reader.pages)
 
     try:
         signature = reader.attachments["signature"][0]

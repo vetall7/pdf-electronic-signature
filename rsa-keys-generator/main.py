@@ -43,19 +43,6 @@ def save_private_key(encrypted_private_key):
         f.write(encrypted_private_key)
         print("🔑 Private key saved successfully to private_key.pem")
 
-    # media_dir = '/media'
-    # user = os.getlogin()
-    # media_dir = f'/media/{user}'
-    # if os.path.exists(media_dir):
-    #     usb_drives = [os.path.join(media_dir, d) for d in os.listdir(media_dir)
-    #                     if os.path.isdir(os.path.join(media_dir, d))]
-    #     if usb_drives:
-    #         usb_drive = usb_drives[0]
-    #         with open(f"private_key.pem", "wb") as f:
-    #             f.write(encrypted_private_key)
-
-    #         print(f"🔑 Private key saved successfully to {usb_drive}/private_key.pem")
-
 
 def save_public_key(public_key):
     with open("public_key.pem", "wb") as f:

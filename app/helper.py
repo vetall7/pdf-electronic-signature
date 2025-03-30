@@ -33,7 +33,6 @@ def load_private_key(pin):
 def load_public_key():
     key_path = "../rsa-keys-generator/public_key.pem"
     if not os.path.exists(key_path):
-        messagebox.showerror("Error", "Public key not found in application directory")
         return
     with open(key_path, "rb") as key_file:
         return serialization.load_pem_public_key(key_file.read())

@@ -1,12 +1,37 @@
 import tkinter as tk
 from tkinter import filedialog
 import os
-from helper import sign_pdf, verify_pdf
+from helper import *
 
 def show_upload_button(mode):
     global selected_mode
     selected_mode = mode
     start_frame.pack_forget()
+
+    for widget in upload_frame.winfo_children():
+        if isinstance(widget, tk.Label):
+            widget.destroy()
+        
+    upload_button.config(state=tk.NORMAL)
+
+    print (f"Selected mode: {selected_mode}")
+    if selected_mode == "sign":
+        is_pendrive_detected = find_pendrive()
+        if is_pendrive_detected is None:
+            upload_button.config(state=tk.DISABLED)
+            message_label = tk.Label(upload_frame, text="Pendrive with private key is not detected.", fg="red") 
+        else:
+            message_label = tk.Label(upload_frame, text="Pendrive with private key is detected.", fg="green")
+    if selected_mode == "verify":
+        is_public_key_detected = load_public_key()
+        if is_public_key_detected is None:
+            upload_button.config(state=tk.DISABLED)
+            message_label = tk.Label(upload_frame, text="Public key is not detected. (../rsa-keys-generator/public_key.pem)", fg="red")
+        else:
+            message_label = tk.Label(upload_frame, text="Public key is detected.", fg="green")
+          
+    upload_button.pack(pady=5)
+    message_label.pack(pady=15)      
     upload_frame.pack()
     cancel_button.pack()
 
@@ -72,7 +97,6 @@ start_frame.pack()
 
 upload_frame = tk.Frame(root)
 upload_button = tk.Button(upload_frame, text="Upload PDF", command=upload_file)
-upload_button.pack()
 
 file_label = tk.Label(root, text="")
 

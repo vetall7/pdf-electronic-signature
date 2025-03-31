@@ -1,9 +1,19 @@
+"""
+@file: gui.py
+@brief: This script provides a GUI for signing and verifying PDF files using RSA keys.
+@details: The GUI allows users to select a PDF file, enter a PIN for signing, and verify the signature.
+"""
 import tkinter as tk
 from tkinter import filedialog
 import os
 from helper import *
 
 def show_upload_button(mode):
+    """
+    @brief: This function is called when the user selects a mode (sign or verify).
+    @details: It updates the GUI to show the upload button and checks for the presence of the required keys.
+    """
+
     global selected_mode
     selected_mode = mode
     start_frame.pack_forget()
@@ -14,7 +24,6 @@ def show_upload_button(mode):
         
     upload_button.config(state=tk.NORMAL)
 
-    print (f"Selected mode: {selected_mode}")
     if selected_mode == "sign":
         is_pendrive_detected = find_pendrive()
         if is_pendrive_detected is None:
@@ -36,6 +45,10 @@ def show_upload_button(mode):
     cancel_button.pack()
 
 def upload_file():
+    """
+    @brief: This function is called when the user clicks the upload button.
+    @details: It opens a file dialog to select a PDF file and updates the GUI accordingly.
+    """
     file_path.set(filedialog.askopenfilename(filetypes=[("PDF Files", "*.pdf")]))
     if file_path.get():
         file_label.config(text=f"Selected file: {os.path.basename(file_path.get())}")
@@ -47,12 +60,20 @@ def upload_file():
             go_button.pack()
 
 def enable_go_button(*args):
+    """
+    @brief: This function is called when the user types in the PIN entry field.
+    @details: It enables or disables the Go button based on whether the PIN entry is empty or not.
+    """
     if pin_entry.get():
         go_button.pack()
     else:
         go_button.pack_forget()
 
 def process_file(pin):
+    """
+    @brief: This function is called when the user clicks the Go button.
+    @details: It processes the selected PDF file based on the selected mode (sign or verify).
+    @param pin: The PIN entered by the user for signing the PDF file."""
     status = None
     if selected_mode == "sign":
         status = sign_pdf(file_path, pin)
@@ -69,6 +90,10 @@ def process_file(pin):
     status_label.pack()
     
 def cancel_action():
+    """
+    @brief: This function is called when the user clicks the Cancel button.
+    @details: It resets the GUI to its initial state and clears the selected file and PIN entry."""
+
     upload_frame.pack_forget()
     go_button.pack_forget()
     pin_frame.pack_forget()

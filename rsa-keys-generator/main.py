@@ -32,7 +32,7 @@ def encrypt_private_key(private_key, pin):
     private_key_bytes = private_key.private_bytes(
         encoding=serialization.Encoding.PEM,
         format=serialization.PrivateFormat.TraditionalOpenSSL,
-        encryption_algorithm=serialization.BestAvailableEncryption(key) # AES-256-CBC
+        encryption_algorithm=serialization.BestAvailableEncryption(key) # AES-256
     )
 
     return private_key_bytes
